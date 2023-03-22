@@ -10,6 +10,19 @@ export PATH=$PATH:/usr/local/bin
 # Disable output not usually helpful when running in automation (such as guidance to run plan after init)
 export TF_IN_AUTOMATION=1
 
+parse_arguments() {
+  while (($# > 0)); do
+    # Check for --use-cache
+    if [[ "$@" == *"--enable-cache"* ]]; then
+      if [[ -z $AGENT_TEMPDIRECTORY ]]; then
+        local CACHE_DIR="/tmp"
+      else
+        local CACHE_DIR=$AGENT_TEMPDIRECTORY
+      fi
+      export TF_PLUGIN_CACHE_DIR=$CACHE_DIR
+    fi
+}
+
 # Store and return last failure from validate so this can validate every directory passed before exiting
 VALIDATE_ERROR=0
 
